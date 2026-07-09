@@ -1,0 +1,9 @@
+# System Monitor (Go)
+
+A small Go application that retrieves:
+
+- CPU information
+- Memory usage
+- Disk space
+
+Built during my internship at Ooredoo (July 2026)
