@@ -41,7 +41,7 @@ func main() {
 	fmt.Printf("Disk Usage: %.2f%%\n\n", DiskUsage)
 
 	// format payload
-	payload := fmt.Sprintf("CPU Usage: %.2f%%\nMemory Usage: %.2f%%\nDisk Usage: %.2f%%\n", CPUUsage, MemoryUsage, DiskUsage)
+	payload := fmt.Sprintf("\nSystem Information:\n-------------------\nCPU Usage: %.2f%%\nMemory Usage: %.2f%%\nDisk Usage: %.2f%%\n\n", CPUUsage, MemoryUsage, DiskUsage)
 	
 	// send data to server
 	_, err = conn.Write([]byte(payload))
