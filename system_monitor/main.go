@@ -4,9 +4,17 @@ import (
 	"fmt"
 	"log"
 	"net" // for TCP connection
+	"encoding/gob" // converts structs - bytes
+	"bytes"
 
 	"system-monitor/system_functions"
 )
+
+type SystemInfo struct {
+	CPUUsage    float64
+	MemoryUsage float64
+	DiskUsage   float64
+}
 
 func main() {
 	// Connect to TCP server
@@ -16,36 +24,49 @@ func main() {
 	}
 	defer conn.Close()
 
-	fmt.Println("\nSystem Information:")
-	fmt.Println("-------------------")
+	// fmt.Println("\nSystem Information:")
+	// fmt.Println("-------------------")
 
 	// CPU usage	
 	CPUUsage, err := system_functions.GetCPUInfo()
 	if err != nil {
 		log.Fatalf("Failed to get CPU usage: %v", err)
 	}
-	fmt.Printf("CPU Usage: %.2f%%\n", CPUUsage)
+	// fmt.Printf("CPU Usage: %.2f%%\n", CPUUsage)
 
 	// memory usage
 	MemoryUsage, err := system_functions.GetMemoryUsage()
 	if err != nil {
 		log.Fatalf("Failed to get memory usage: %v", err)
 	}
-	fmt.Printf("Memory Usage: %.2f%%\n", MemoryUsage)
+	// fmt.Printf("Memory Usage: %.2f%%\n", MemoryUsage)
 
 	// disk usage
 	DiskUsage, err := system_functions.GetDiskUsage()
 	if err != nil {
 		log.Fatalf("Failed to get disk usage: %v", err)
 	}
-	fmt.Printf("Disk Usage: %.2f%%\n\n", DiskUsage)
+	// fmt.Printf("Disk Usage: %.2f%%\n\n", DiskUsage)
 
-	// format payload
-	payload := fmt.Sprintf("\nSystem Information:\n-------------------\nCPU Usage: %.2f%%\nMemory Usage: %.2f%%\nDisk Usage: %.2f%%\n\n", CPUUsage, MemoryUsage, DiskUsage)
+	systemInfo := SystemInfo{
+		CPUUsage:    CPUUsage,
+		MemoryUsage: MemoryUsage,
+		DiskUsage:   DiskUsage,
+	}
+
+	// payload
+	var buffer bytes.Buffer
+	encoder := gob.NewEncoder(&buffer) // gob encoder that writes into buffer
+	err = encoder.Encode(systemInfo) // turns to binary
+	if err != nil {
+		log.Fatalf("Failed to encode system information: %v", err)
+	}
 	
 	// send data to server
-	_, err = conn.Write([]byte(payload))
+	_, err = conn.Write(buffer.Bytes()) // sends bytes
 	if err != nil {
 		log.Fatalf("Failed to send data to server: %v", err)
 	}
+
+	fmt.Println("System information sent to server.")
 }

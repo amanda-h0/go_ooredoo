@@ -3,35 +3,41 @@ package main
 import (
 	"fmt"
 	"net"
-	"io" // I/O interfaces - used to detect end of stream/file (EOF)
 	"log"
+	"encoding/gob"
 )
+
+type SystemInfo struct {
+	CPUUsage    float64
+	MemoryUsage float64
+	DiskUsage   float64
+}
 
 func handleConnection(conn net.Conn) {
 	defer conn.Close() // close connection when function exits
 	fmt.Printf("New client connected: %v\n", conn.RemoteAddr().String())
 
-	buffer := make([]byte, 1024) // temp bytes to hold incoming data
+//  conn.RemoteAddr()
 
-	for {
-		n, err := conn.Read(buffer) // reads bytes and returns number of bytes read (n)
-		if err != nil {
-			if err == io.EOF { // EOF = client closed connection
-				fmt.Printf("Client %s disconnected.\n", conn.RemoteAddr().String())
-			} else {
-				log.Printf("Read error from %s: %v\n", conn.RemoteAddr().String(), err)
-			}
-			break // triggers deferred conn.Close()
-		}
+	decoder := gob.NewDecoder(conn) // reads bytes from connection and decodes into struct
 
-		message := buffer[:n] // slice buffer to isolate the bytes read (what the client sent)
-		fmt.Print(string(message)) // raw bytes -> human-readable string
+	var systemInfo SystemInfo
 
-		_, err = conn.Write([]byte("ACK\n")) // confirmation sent to client
-		if err != nil { // if server fails to send to client
-			log.Printf("Write error to %s: %v\n", conn.RemoteAddr().String(), err)
-			break
-		}
+	err := decoder.Decode(&systemInfo) // & for address to be filled
+	if err != nil {
+		log.Printf("Failed to decode system information from %s: %v\n", conn.RemoteAddr().String(), err)
+		return
+	}
+
+	fmt.Println("\nSystem Information:")
+	fmt.Println("-------------------")
+	fmt.Printf("CPU Usage: %.2f%%\n", systemInfo.CPUUsage)
+	fmt.Printf("Memory Usage: %.2f%%\n", systemInfo.MemoryUsage)
+	fmt.Printf("Disk Usage: %.2f%%\n", systemInfo.DiskUsage)
+
+	_, err = conn.Write([]byte("ACK\n")) // confirmation sent to client
+	if err != nil { // if server fails to send to client
+		log.Printf("Write error to %s: %v\n", conn.RemoteAddr().String(), err)
 	}
 }
 
