@@ -14,7 +14,7 @@ import (
 
 func main() {
 	// Connect to TCP server
-	conn, err := net.Dial("tcp", "192.168.10.111:8080")
+	conn, err := net.Dial("tcp", "localhost:8080")
 	if err != nil {
 		log.Fatalf("Failed to connect to TCP server: %v", err)
 	}
@@ -45,10 +45,10 @@ func main() {
 	// fmt.Printf("Disk Usage: %.2f%%\n\n", DiskUsage)
 
 	systemInfo := models.SystemInfo{
-		CPU:    CPUUsage,
-		Mem: MemoryUsage,
-		Disk:   DiskUsage,
-		Time: time.Now().Unix(),
+		CPUUsage:    CPUUsage,
+		MemoryUsage: MemoryUsage,
+		DiskUsage:   DiskUsage,
+		Timestamp: time.Now().Unix(),
 	}
 
 	// payload
