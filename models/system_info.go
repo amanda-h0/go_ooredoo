@@ -1,7 +1,8 @@
 package models
 
 type SystemInfo struct {
-	CPUUsage float64
-	MemoryUsage float64
-	DiskUsage float64
+	CPU float64
+	Mem float64
+	Disk float64
+	Time int64
 }

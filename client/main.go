@@ -6,14 +6,15 @@ import (
 	"net" // for TCP connection
 	"encoding/gob" // converts structs - bytes
 	"bytes"
+	"time"
 
-	"system-monitor/system_monitor/system_functions"
+	"system-monitor/client/system_functions"
 	"system-monitor/models"
 )
 
 func main() {
 	// Connect to TCP server
-	conn, err := net.Dial("tcp", "localhost:8080")
+	conn, err := net.Dial("tcp", "192.168.10.111:8080")
 	if err != nil {
 		log.Fatalf("Failed to connect to TCP server: %v", err)
 	}
@@ -44,9 +45,10 @@ func main() {
 	// fmt.Printf("Disk Usage: %.2f%%\n\n", DiskUsage)
 
 	systemInfo := models.SystemInfo{
-		CPUUsage:    CPUUsage,
-		MemoryUsage: MemoryUsage,
-		DiskUsage:   DiskUsage,
+		CPU:    CPUUsage,
+		Mem: MemoryUsage,
+		Disk:   DiskUsage,
+		Time: time.Now().Unix(),
 	}
 
 	// payload
