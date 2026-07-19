@@ -5,13 +5,9 @@ import (
 	"net"
 	"log"
 	"encoding/gob"
-)
 
-type SystemInfo struct {
-	CPUUsage    float64
-	MemoryUsage float64
-	DiskUsage   float64
-}
+	"system-monitor/models"
+)
 
 func handleConnection(conn net.Conn) {
 	defer conn.Close() // close connection when function exits
@@ -21,7 +17,7 @@ func handleConnection(conn net.Conn) {
 
 	decoder := gob.NewDecoder(conn) // reads bytes from connection and decodes into struct
 
-	var systemInfo SystemInfo
+	var systemInfo models.SystemInfo
 
 	err := decoder.Decode(&systemInfo) // & for address to be filled
 	if err != nil {

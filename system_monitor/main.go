@@ -7,14 +7,9 @@ import (
 	"encoding/gob" // converts structs - bytes
 	"bytes"
 
-	"system-monitor/system_functions"
+	"system-monitor/system_monitor/system_functions"
+	"system-monitor/models"
 )
-
-type SystemInfo struct {
-	CPUUsage    float64
-	MemoryUsage float64
-	DiskUsage   float64
-}
 
 func main() {
 	// Connect to TCP server
@@ -48,7 +43,7 @@ func main() {
 	}
 	// fmt.Printf("Disk Usage: %.2f%%\n\n", DiskUsage)
 
-	systemInfo := SystemInfo{
+	systemInfo := models.SystemInfo{
 		CPUUsage:    CPUUsage,
 		MemoryUsage: MemoryUsage,
 		DiskUsage:   DiskUsage,
