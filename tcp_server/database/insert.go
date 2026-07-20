@@ -1,9 +1,14 @@
 package database
 
-import "system-monitor/models"
+import (
+	"fmt"
+	"system-monitor/models"
+)
 
 
 func InsertSystemInfo(info models.SystemInfo) error {
+
+	fmt.Println("Inserting into database...")
 
 	query := `
 	INSERT INTO system_metrics

@@ -23,7 +23,6 @@ func handleConnection(conn net.Conn) {
 		log.Printf("Failed to decode system information from %s: %v\n", conn.RemoteAddr().String(), err)
 		return
 	}
-	systemInfo.IPAddress = conn.RemoteAddr().(*net.TCPAddr).IP.String()
 
 	fmt.Println("\nSystem Information:")
 	fmt.Println("-------------------")
@@ -38,6 +37,8 @@ func handleConnection(conn net.Conn) {
 
 	if err != nil {
 		log.Printf("Failed to insert into database: %v", err)
+	} else {
+		fmt.Println("Successfully saved to database")
 	}
 
 	_, err = conn.Write([]byte("ACK\n")) // confirmation sent to client
