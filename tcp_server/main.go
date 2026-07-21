@@ -14,6 +14,9 @@ func handleConnection(conn net.Conn) {
 	defer conn.Close() // close connection when function exits
 	fmt.Printf("New client connected: %v\n", conn.RemoteAddr().String())
 
+	fmt.Println("RemoteAddr:", conn.RemoteAddr().String())
+	fmt.Printf("IP: %s\n", conn.RemoteAddr().(*net.TCPAddr).IP.String())
+
 	decoder := gob.NewDecoder(conn) // reads bytes from connection and decodes into struct
 
 	var systemInfo models.SystemInfo
