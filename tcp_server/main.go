@@ -40,7 +40,6 @@ func handleConnection(conn net.Conn) {
 	} else {
 		fmt.Println("Successfully saved to database")
 	}
-
 	_, err = conn.Write([]byte("ACK\n")) // confirmation sent to client
 	if err != nil { // if server fails to send to client
 		log.Printf("Write error to %s: %v\n", conn.RemoteAddr().String(), err)
