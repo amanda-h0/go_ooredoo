@@ -15,7 +15,7 @@ import (
 func main() {
 	for {
 		// Connect to TCP server
-		conn, err := net.Dial("tcp", "localhost:8080")
+		conn, err := net.Dial("tcp", "127.0.0.1:8080")
 		if err != nil {
 			log.Fatalf("Failed to connect to TCP server: %v", err)
 

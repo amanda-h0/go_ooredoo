@@ -34,7 +34,13 @@ func handleConnection(conn net.Conn) {
 	fmt.Printf("Disk Usage: %.2f%%\n", systemInfo.DiskUsage)
 
 	// insert into database
-	systemInfo.IPAddress = conn.RemoteAddr().(*net.TCPAddr).IP.String()
+	addr := conn.RemoteAddr().(*net.TCPAddr)
+	ipv4 := addr.IP.To4()
+	if ipv4 != nil {
+		systemInfo.IPAddress = ipv4.String()
+	} else {
+		systemInfo.IPAddress = addr.IP.String()
+	}
 
 	err = database.InsertSystemInfo(systemInfo)
 
