@@ -27,7 +27,7 @@ func InitDB() {
 		cpu_usage REAL,
 		memory_usage REAL,
 		disk_usage REAL,
-		timestamp INTEGER
+		timestamp TEXT
 	);
 	`
 
