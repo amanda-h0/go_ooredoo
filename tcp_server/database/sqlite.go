@@ -19,6 +19,7 @@ func InitDB() {
 		log.Fatal(err)
 	}
 
+	DB.Exec("PRAGMA journal_mode=WAL;") // allows r & w to happen at the same time
 
 	query := `
 	CREATE TABLE IF NOT EXISTS system_metrics (
@@ -39,3 +40,4 @@ func InitDB() {
 
 	log.Println("SQLite database initialized")
 }
+
